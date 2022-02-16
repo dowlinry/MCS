@@ -12,6 +12,10 @@ target 'ActivityTracker' do
     :hermes_enabled => false
   )
 
+  pod 'RNWalkCounter', :path => '../node_modules/react-native-accurate-step-counter'
+
+  pod 'react-native-shake', :path => '../node_modules/react-native-shake'
+
   target 'ActivityTrackerTests' do
     inherit! :complete
     # Pods for testing

@@ -1,3 +1,9 @@
 rootProject.name = 'ActivityTracker'
+include ':react-native-shake'
+project(':react-native-shake').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-shake/android')
+include ':react-native-shake'
+project(':react-native-shake').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-shake/android')
+include ':react-native-accurate-step-counter'
+project(':react-native-accurate-step-counter').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-accurate-step-counter/android')
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'

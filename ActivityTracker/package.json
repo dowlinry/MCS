@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "react": "17.0.2",
-    "react-native": "0.67.2"
+    "react-native": "0.67.2",
+    "react-native-accurate-step-counter": "^2.0.4",
+    "react-native-shake": "^5.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
