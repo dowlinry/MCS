@@ -1,51 +1,50 @@
-import React, {Component, useEffect, useState} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-import { startCounter, stopCounter } from 'react-native-accurate-step-counter';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import StepCounterScreen from './Screens/Screens';
+
+import database from '@react-native-firebase/database';
+import { firebase } from './firebase';
+
+firebase.app();
+const stepsToday = getStepsToday();
+
+const Stack = createNativeStackNavigator();
 const App = () => {
-  const [steps, setSteps] = useState(0);
-
-  useEffect(() => {
-    const config = {
-      default_threshold: 5.0,
-      default_delay: 150000000,
-      cheatInterval: 3000,
-      onStepCountChange: (stepCount) => { setSteps(stepCount) },
-      onCheat: () => { console.log("User is Cheating") }
-    }
-    startCounter(config);
-    return () => { stopCounter() }
-  }, []);
-
   return (
-    <SafeAreaView>
-      <View style={styles.screen}>
-        <Text>Activity Tracker App</Text>
-        <Text style={styles.step}>{steps}</Text>
-      </View>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Step Counter"
+          component={StepCounterScreen}
+          // options={{ title: 'Welcome' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
-const styles = StyleSheet.create({
-  screen: {
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  step: {
-    fontSize: 36
-  }
-});
+function getStepsToday(){
+  let steps = 0;
+  database()
+  .ref(`DailySteps/${getDate()}`)
+  .once('value')
+  .then(snapshot => {
+    if(snapshot.val()){
+      steps = snapshot.val();
+    }
+  });
+  return steps;
+}
+
+function getDate(){
+  let date = new Date();
+  let dd = String(date.getDate()).padStart(2, '0');
+  let mm = String(date.getMonth() + 1).padStart(2, '0'); 
+  let yyyy = date.getFullYear();
+
+  return dd + '-' + mm + '-' + yyyy
+}
 
 export default App;
