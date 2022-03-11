@@ -69,19 +69,6 @@ function getDate(){
   return dd + '-' + mm + '-' + yyyy
 }
 
-// function getStepsToday(){
-//   let steps = 0;
-//   database()
-//     .ref(`DailySteps/${getDate()}`)
-//     .once('value')
-//     .then(snapshot => {
-//       if(snapshot.val()){
-//         steps = snapshot.val();
-//       }
-//     });
-//   console.log(steps)
-//   return steps;
-// }
 const styles = StyleSheet.create({
   screen: {
     width: '100%',
