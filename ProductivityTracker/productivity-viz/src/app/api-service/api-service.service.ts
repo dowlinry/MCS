@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
+import { Observable, of, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiServiceService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  firebaseURL = "";
-  accessToken = "";
-  githubUsername = "";
+  firebaseURL: any = "ewq";
+  accessToken: any = "dqw9";
+  githubUsername: any;
 
   public setFirebaseURL(url: string){
     this.firebaseURL = url;
@@ -22,4 +24,10 @@ export class ApiServiceService {
   public setUsername(name: string){
     this.githubUsername = name;
   }
+
+  public getCommitData(){
+    return this.http.get(`https://api.github.com/users/${this.githubUsername}/events`);
+  }
+
+  public getFirebaseData(){}
 }

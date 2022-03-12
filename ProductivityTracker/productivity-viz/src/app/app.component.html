@@ -1,5 +1,7 @@
 <div>
   <h1>Visualization of Activity and Productivity Data</h1>
-  <app-graph></app-graph>
   <app-details></app-details>
+  <div *ngIf="graphAvailable()">
+    <app-graph></app-graph>
+  </div>
 </div>

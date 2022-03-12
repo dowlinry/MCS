@@ -8,9 +8,21 @@ import { ApiServiceService } from '../api-service/api-service.service';
 })
 export class GraphComponent implements OnInit {
 
+  githubData: any[] = [];
+  firebaseData: any[] = [];
+
   constructor(private ApiService: ApiServiceService) { }
 
   ngOnInit(): void {
+    this.getFirebaseData();
+  }
+
+  getFirebaseData(){
+    
+  }
+
+  getCommitData(){
+
   }
 
 }
