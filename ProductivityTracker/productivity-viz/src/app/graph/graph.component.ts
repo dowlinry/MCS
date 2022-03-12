@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiServiceService } from '../api-service/api-service.service';
 
 @Component({
   selector: 'app-graph',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GraphComponent implements OnInit {
 
-  constructor() { }
+  constructor(private ApiService: ApiServiceService) { }
 
   ngOnInit(): void {
   }
