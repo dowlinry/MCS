@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { startCounter, stopCounter } from 'react-native-accurate-step-counter';
+// import BackgroundTimer from 'react-native-background-timer'
 
 import database from '@react-native-firebase/database';
 
@@ -32,8 +33,8 @@ const StepCounterScreen = () => {
 
   useEffect(() => {
     const config = {
-      default_threshold: 5.0,
-      default_delay: 150000000,
+      default_threshold: 15.0,
+      default_delay: 500000000,
       cheatInterval: 3000,
       onStepCountChange: (stepCount) => {
         if(!loading){ 
