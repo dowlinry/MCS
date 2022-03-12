@@ -16,6 +16,8 @@ target 'ActivityTracker' do
 
   pod 'react-native-shake', :path => '../node_modules/react-native-shake'
 
+  pod 'react-native-background-timer', :path => '../node_modules/react-native-background-timer'
+
   target 'ActivityTrackerTests' do
     inherit! :complete
     # Pods for testing

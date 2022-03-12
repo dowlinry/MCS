@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 
 import { startCounter, stopCounter } from 'react-native-accurate-step-counter';
-// import BackgroundTimer from 'react-native-background-timer'
+import BackgroundTimer from 'react-native-background-timer'
 
 import database from '@react-native-firebase/database';
 
@@ -16,6 +16,8 @@ const StepCounterScreen = () => {
   var initSteps = 0;
   var totalSteps = 0;
   var loading = true;
+
+  BackgroundTimer.runBackgroundTimer(() => {}, 500); // Stops app from going inactive when in background / when phone locked
 
   if(loading){
     database()
