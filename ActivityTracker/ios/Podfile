@@ -18,6 +18,8 @@ target 'ActivityTracker' do
 
   pod 'react-native-background-timer', :path => '../node_modules/react-native-background-timer'
 
+  pod 'RNSensors', :path => '../node_modules/react-native-sensors'
+
   target 'ActivityTrackerTests' do
     inherit! :complete
     # Pods for testing

@@ -6,19 +6,27 @@ import {
   View,
 } from 'react-native';
 
-import { startCounter, stopCounter } from 'react-native-accurate-step-counter';
-import BackgroundTimer from 'react-native-background-timer'
+import {
+  accelerometer,
+  setUpdateIntervalForType,
+  SensorTypes
+} from "react-native-sensors";
 
 import database from '@react-native-firebase/database';
 
 
 const StepCounterScreen = () => {
   const [displayedSteps, setDisplayedSteps] = useState(0);
+
   var initSteps = 0;
   var totalSteps = 0;
+
+  var lastMovement = 0;
+
   var loading = true;
 
-  BackgroundTimer.runBackgroundTimer(() => {}, 500); // Stops app from going inactive when in background / when phone locked
+  setUpdateIntervalForType(SensorTypes.accelerometer, 1000); // defaults to 100ms
+
 
   if(loading){
     database()
@@ -35,22 +43,21 @@ const StepCounterScreen = () => {
   }
 
   useEffect(() => {
-    const config = {
-      default_threshold: 15.0,
-      default_delay: 500000000,
-      onStepCountChange: (stepCount) => {
-        if(!loading){ 
-          totalSteps = stepCount + initSteps;
+    accelerometer.subscribe(
+      ({x, y, z}) => {
+        const currMovement = x + y + z
+        if(Math.abs(currMovement - lastMovement) > 2){
+          totalSteps ++;
           setDisplayedSteps(totalSteps);
           database().ref(`DailySteps/${getDate()}`).set({
             value: totalSteps
           })
         }
+        lastMovement = currMovement;
       }
-    }
-    startCounter(config);
-    return () => { stopCounter() }
+    )
   }, []);
+
   
   return (
     <SafeAreaView>
