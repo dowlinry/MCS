@@ -11,6 +11,7 @@ import BackgroundTimer from 'react-native-background-timer'
 
 import database from '@react-native-firebase/database';
 
+
 const StepCounterScreen = () => {
   const [displayedSteps, setDisplayedSteps] = useState(0);
   var initSteps = 0;
@@ -37,7 +38,6 @@ const StepCounterScreen = () => {
     const config = {
       default_threshold: 15.0,
       default_delay: 500000000,
-      cheatInterval: 3000,
       onStepCountChange: (stepCount) => {
         if(!loading){ 
           totalSteps = stepCount + initSteps;
@@ -46,8 +46,7 @@ const StepCounterScreen = () => {
             value: totalSteps
           })
         }
-      },
-      onCheat: () => { console.log("User is Cheating") }
+      }
     }
     startCounter(config);
     return () => { stopCounter() }
