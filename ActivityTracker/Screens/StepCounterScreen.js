@@ -45,15 +45,17 @@ const StepCounterScreen = () => {
   useEffect(() => {
     accelerometer.subscribe(
       ({x, y, z}) => {
-        const currMovement = x + y + z
-        if(Math.abs(currMovement - lastMovement) > 2){
-          totalSteps ++;
-          setDisplayedSteps(totalSteps);
-          database().ref(`DailySteps/${getDate()}`).set({
-            value: totalSteps
-          })
+        if(!loading){
+          const currMovement = x + y + z
+          if(Math.abs(currMovement - lastMovement) > 2){
+            totalSteps ++;
+            setDisplayedSteps(totalSteps);
+            database().ref(`DailySteps/${getDate()}`).set({
+              value: totalSteps
+            })
+          }
+          lastMovement = currMovement;
         }
-        lastMovement = currMovement;
       }
     )
   }, []);
