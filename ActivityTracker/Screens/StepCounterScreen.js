@@ -13,13 +13,18 @@ import {
 } from "react-native-sensors";
 
 import database from '@react-native-firebase/database';
+import _BackgroundTimer from 'react-native-background-timer'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-var loading = true;
+// Push data to firebase every minute
+_BackgroundTimer.runBackgroundTimer(() => {
+  pushSteps();
+  console.log("PUSHING")
+}, 30000); 
 
 const StepCounterScreen = () => {
   const [displayedSteps, setDisplayedSteps] = useState(0);
-
+  
   var initSteps = 0;
   var totalSteps = 0;
 
@@ -38,7 +43,6 @@ const StepCounterScreen = () => {
       if(snapshot.val()){
         initSteps = snapshot.val().value;
         totalSteps = initSteps;
-        setDisplayedSteps(totalSteps);
         loading = false;
       }
     });
@@ -49,7 +53,7 @@ const StepCounterScreen = () => {
       ({x, y, z}) => {
         if(!loading){
           const currMovement = x + y + z
-          if(Math.abs(currMovement - lastMovement) > 2){
+          if(Math.abs(currMovement - lastMovement) > 1){
             totalSteps ++;
             storeSteps(totalSteps);
             setDisplayedSteps(totalSteps);
@@ -88,9 +92,11 @@ const readSteps = async () => {
 
 const pushSteps = async () => {
   readSteps().then(steps => {
-    console.log(steps);
+    database()
+    .ref(`DailySteps/${getDate()}`).set({
+      value: steps
+    })
   });
-
 }
 
 function getDate(){
