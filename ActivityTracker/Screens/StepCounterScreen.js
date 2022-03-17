@@ -13,7 +13,9 @@ import {
 } from "react-native-sensors";
 
 import database from '@react-native-firebase/database';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+var loading = true;
 
 const StepCounterScreen = () => {
   const [displayedSteps, setDisplayedSteps] = useState(0);
@@ -49,10 +51,8 @@ const StepCounterScreen = () => {
           const currMovement = x + y + z
           if(Math.abs(currMovement - lastMovement) > 2){
             totalSteps ++;
+            storeSteps(totalSteps);
             setDisplayedSteps(totalSteps);
-            database().ref(`DailySteps/${getDate()}`).set({
-              value: totalSteps
-            })
           }
           lastMovement = currMovement;
         }
@@ -60,7 +60,6 @@ const StepCounterScreen = () => {
     )
   }, []);
 
-  
   return (
     <SafeAreaView>
       <View style={styles.screen}>
@@ -69,7 +68,30 @@ const StepCounterScreen = () => {
       </View>
     </SafeAreaView>
   );
+
 };
+
+const storeSteps = async(value) => {
+  try{
+    const steps = JSON.stringify(value);
+    await AsyncStorage.setItem('steps', steps);
+  } catch (e){
+    console.log(e);
+  }
+  
+}
+
+const readSteps = async () => {
+  const jsonValue = await AsyncStorage.getItem('steps')
+  return jsonValue != null ? JSON.parse(jsonValue) : null;
+}
+
+const pushSteps = async () => {
+  readSteps().then(steps => {
+    console.log(steps);
+  });
+
+}
 
 function getDate(){
   let date = new Date();
