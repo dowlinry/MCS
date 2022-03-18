@@ -1,17 +1,19 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import config from 'assets/config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiServiceService {
 
+
   constructor(private http: HttpClient) { }
 
-  firebaseURL: any = "ewq";
-  accessToken: any = "dqw9";
-  githubUsername: any;
+  firebaseURL: any = config.firebaseDatabaseURL;
+  accessToken: any = config.githubAccessToken;
+  githubUsername: any = config.githubUsername;
 
   public setFirebaseURL(url: string){
     this.firebaseURL = url;
