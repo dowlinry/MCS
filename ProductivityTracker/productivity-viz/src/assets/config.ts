@@ -1,6 +1,7 @@
 const config = {
     githubUsername: "",
     githubAccessToken: "",
+    repos: [],
     firebaseDatabaseURL: ""   
 }
 

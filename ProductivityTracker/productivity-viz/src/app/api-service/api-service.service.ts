@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Octokit } from '@octokit/rest';
+
 import config from 'assets/config';
 
 @Injectable({
@@ -11,9 +13,14 @@ export class ApiServiceService {
 
   constructor(private http: HttpClient) { }
 
-  firebaseURL: any = config.firebaseDatabaseURL;
-  accessToken: any = config.githubAccessToken;
-  githubUsername: any = config.githubUsername;
+  private firebaseURL: any = config.firebaseDatabaseURL;
+  private accessToken: any = config.githubAccessToken;
+  private githubUsername: any = config.githubUsername;
+  private repos: any = config.repos;
+
+  private octokit = new Octokit({
+    auth: this.accessToken
+  })
 
   public setFirebaseURL(url: string){
     this.firebaseURL = url;
@@ -28,7 +35,12 @@ export class ApiServiceService {
   }
 
   public getCommitData(){
-    return this.http.get(`https://api.github.com/users/${this.githubUsername}/events`);
+    this.repos.forEach((repo: any) => {
+      this.octokit.rest.repos.listCommits({
+        owner: this.githubUsername,
+        repo: repo.name,
+      }).then(console.log)
+    })
   }
 
   public getFirebaseData(){}

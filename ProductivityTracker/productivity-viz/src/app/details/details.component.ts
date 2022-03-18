@@ -11,20 +11,21 @@ export class DetailsComponent implements OnInit {
   constructor(private ApiService: ApiServiceService) { }
 
   ngOnInit(): void {
+    
   }
 
-  accessTokenInput(value: string){
-    this.ApiService.setAccessToken(value);
-    alert("Access Token has been set as: " + this.ApiService.accessToken);
-  }
+  // accessTokenInput(value: string){
+  //   this.ApiService.setAccessToken(value);
+  //   alert("Access Token has been set as: " + this.ApiService.accessToken);
+  // }
 
-  firebaseUrlInput(value: string){
-    this.ApiService.setFirebaseURL(value);
-    alert("Firebase URL has been set as: " + this.ApiService.firebaseURL);
-  }
+  // firebaseUrlInput(value: string){
+  //   this.ApiService.setFirebaseURL(value);
+  //   alert("Firebase URL has been set as: " + this.ApiService.firebaseURL);
+  // }
 
-  githubUsernameInput(value: string){
-    this.ApiService.setUsername(value);
-    alert("Github username has been set as: " + this.ApiService.githubUsername);
-  }
+  // githubUsernameInput(value: string){
+  //   this.ApiService.setUsername(value);
+  //   alert("Github username has been set as: " + this.ApiService.githubUsername);
+  // }
 }

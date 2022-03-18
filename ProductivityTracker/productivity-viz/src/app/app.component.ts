@@ -11,10 +11,10 @@ export class AppComponent {
 
   constructor(private ApiService: ApiServiceService){}
 
-  public graphAvailable(){
-    if(this.ApiService.accessToken && this.ApiService.firebaseURL && this.ApiService.githubUsername){
-      return true;
-    }
-    else return false;
-  }
+  // public graphAvailable(){
+  //   if(this.ApiService.accessToken && this.ApiService.firebaseURL && this.ApiService.githubUsername){
+  //     return true;
+  //   }
+  //   else return false;
+  // }
 }

@@ -14,7 +14,7 @@ export class GraphComponent implements OnInit {
   constructor(private ApiService: ApiServiceService) { }
 
   ngOnInit(): void {
-    this.getFirebaseData();
+    this.getCommitData();
   }
 
   getFirebaseData(){
@@ -22,7 +22,8 @@ export class GraphComponent implements OnInit {
   }
 
   getCommitData(){
-
+    console.log("Getting commit data")
+    this.ApiService.getCommitData();
   }
 
 }
