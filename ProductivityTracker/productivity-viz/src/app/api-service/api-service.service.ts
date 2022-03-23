@@ -36,32 +36,31 @@ export class ApiServiceService {
   }
 
   public async getCommitData(){
-    this.repos.forEach(async (repo: any) => {
-      const repoCommits = await this.getRepoCommits(repo);
+    for(const repo of this.repos) {
+     const repoCommits = await this.getRepoCommits(repo);
       
-      for(const commit of repoCommits){
-        const details = await this.getCommitDetails(commit);
-        console.log(details);
-      }
-    })
-    
+     console.log(await repoCommits)
+     
+    }
   }
 
   private async getRepoCommits(repo: any){
-      let repoCommits: any  = [];
-      const branches: any = await this.getBranches(repo);
+    let repoCommits: any  = [];
+    const branches: any = await this.getBranches(repo);
       
-      branches.data.forEach(async (branch: any) => {
-        const commits: any = await this.getBranchCommits(repo, branch)
+    branches.data.forEach(async (branch: any) => {
+      const commits: any = await this.getBranchCommits(repo, branch)
         
-        commits.data.forEach((commit: any) => {
-          if(this.isUserCommit(commit)){
-            repoCommits[commit.commit.author.date] = commit.commit;
-          }
-        })
+      commits.data.forEach(async (commit: any) => {
+        if(this.isUserCommit(commit)){
+          const details = await this.getCommitDetails(commit, repo);
+          
+          repoCommits[commit.commit.author.date] = await details.stats;
+        }
       })
+    })
 
-      return await repoCommits;
+    return await repoCommits;
   }
   private async getBranches(repo: any){
     return await this.octokit.rest.repos.listBranches({
@@ -91,23 +90,15 @@ export class ApiServiceService {
     })
   }
 
-  private async getCommitDetails(commit: any){
-    return await commit;
-  }
+  private async getCommitDetails(commit: any, repo: any){
+    let response = await this.octokit.rest.repos.getCommit({
+      owner: this.githubUsername,
+      repo: repo.name,
+      ref: commit.sha
+    })
 
-  private async test(x: any){
-    console.log(x);
+    return await response.data;
   }
-  // private async test(repo: any){
-  //   this.http.get(
-  //     `https://api.github.com/repos/${this.githubUsername}${repo.name}/branches`,
-  //     {
-  //       headers:{
-  //         authorization: this.accessToken
-  //       }
-  //     }
-  //   ).subscribe(console.log)
-  // }
 
   public getFirebaseData(){}
 }
