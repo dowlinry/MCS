@@ -8,22 +8,39 @@ import { ApiServiceService } from '../api-service/api-service.service';
 })
 export class GraphComponent implements OnInit {
 
-  githubData: any[] = [];
-  firebaseData: any[] = [];
+  private firebaseData: any[] = [];
+
+  private githubData: any[] = [];
+  private repos: any[] = [];
+
+  private currentRepo: any = "";
+  private currentRepoData: any = [];
 
   constructor(private ApiService: ApiServiceService) { }
 
-  ngOnInit(): void {
-    this.getCommitData();
+  async ngOnInit() {
+    await this.getGithubData();
   }
 
-  getFirebaseData(){
+  private getFirebaseData(){
     
   }
 
-  getCommitData(){
+  private async getGithubData() {
     console.log("Getting commit data")
-    this.ApiService.getCommitData();
+    const data = await this.ApiService.getCommitData();
+    for await(const repo of data){
+      console.log(repo)
+      // for await(const branch of repo){
+      //   console.log(await branch)
+      // }
+    }
+    // return await githubData;
   }
+
+  private async getRepoData(repo: any){
+  }
+
+  
 
 }

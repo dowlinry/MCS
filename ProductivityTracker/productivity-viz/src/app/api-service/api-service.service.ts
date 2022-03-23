@@ -35,31 +35,33 @@ export class ApiServiceService {
     this.githubUsername = name;
   }
 
+  public getRepos(){
+    return this.repos;
+  }
   public async getCommitData(){
-    for(const repo of this.repos) {
+    let commits = this.repos.map(async (repo: any) => {
      const repoCommits = await this.getRepoCommits(repo);
-      
-     console.log(await repoCommits)
      
-    }
+     return {[repo.name]: await repoCommits};
+    })
+    return commits;
   }
 
   private async getRepoCommits(repo: any){
-    let repoCommits: any  = [];
     const branches: any = await this.getBranches(repo);
       
-    branches.data.forEach(async (branch: any) => {
+    let repoCommits = branches.data.map(async (branch: any) => {
       const commits: any = await this.getBranchCommits(repo, branch)
         
-      commits.data.forEach(async (commit: any) => {
+      let commitsDetails = commits.data.map(async (commit: any) => {
         if(this.isUserCommit(commit)){
           const details = await this.getCommitDetails(commit, repo);
           
-          repoCommits[commit.commit.author.date] = await details.stats;
-        }
+          return await details;
+        } else return await {};
       })
+      return await commitsDetails
     })
-
     return await repoCommits;
   }
   private async getBranches(repo: any){
@@ -81,13 +83,6 @@ export class ApiServiceService {
     if(commit.author.login === this.githubUsername){
       return true;
     } else return false;
-  }
-
-  private sortRepoCommits(commits: any, repo: any){
-    const commitTimestamps = Object.keys(commits).sort();
-    commitTimestamps.forEach((commit: any) => {
-      console.log(commit)
-    })
   }
 
   private async getCommitDetails(commit: any, repo: any){
