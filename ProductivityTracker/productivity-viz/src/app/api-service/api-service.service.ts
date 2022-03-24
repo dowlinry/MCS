@@ -38,13 +38,10 @@ export class ApiServiceService {
   public getRepos(){
     return this.repos;
   }
-  public async getCommitData(){
-    let commits = this.repos.map(async (repo: any) => {
-     const repoCommits = await this.getRepoCommits(repo);
+  public async getCommitData(repo: any){
+    const repoCommits = await this.getRepoCommits(repo);
      
-     return {[repo.name]: await repoCommits};
-    })
-    return commits;
+    return await repoCommits;
   }
 
   private async getRepoCommits(repo: any){
@@ -67,14 +64,14 @@ export class ApiServiceService {
   private async getBranches(repo: any){
     return await this.octokit.rest.repos.listBranches({
       owner: this.githubUsername,
-      repo: repo.name,
+      repo: repo,
     })
   }
 
   private async getBranchCommits(repo: any, branch: any){
     return await this.octokit.rest.repos.listCommits({
       owner: this.githubUsername,
-      repo: repo.name,
+      repo: repo,
       sha: branch.name
     })
   }
@@ -88,7 +85,7 @@ export class ApiServiceService {
   private async getCommitDetails(commit: any, repo: any){
     let response = await this.octokit.rest.repos.getCommit({
       owner: this.githubUsername,
-      repo: repo.name,
+      repo: repo,
       ref: commit.sha
     })
 
