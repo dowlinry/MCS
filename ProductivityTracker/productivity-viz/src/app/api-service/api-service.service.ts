@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { map, Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Octokit } from '@octokit/rest';
 import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
@@ -11,22 +11,18 @@ import config from 'assets/config';
 })
 export class ApiServiceService {
 
-  
-  constructor(private firebase: AngularFireDatabase) { }
-
-  private firebaseURL: any = config.firebaseDatabaseURL;
   private accessToken: any = config.githubAccessToken;
   private githubUsername: any = config.githubUsername;
   private repos: any = config.repos;
-  private commits: any = []
+  private firebaseData: AngularFireList<any>;
+
+  constructor(private firebase: AngularFireDatabase) { 
+    this.firebaseData = firebase.list('DailySteps');
+  }
 
   private octokit = new Octokit({
     auth: this.accessToken
   })
-
-  public setFirebaseURL(url: string){
-    this.firebaseURL = url;
-  }
 
   public setAccessToken(token: string) {
     this.accessToken = token;
@@ -93,8 +89,16 @@ export class ApiServiceService {
     return await response.data;
   }
 
-  public getFirebaseData(){
-    const data = this.firebase.list('DailySteps');
-    console.log(data);
+  public async getFirebaseData(){
+    let data: any = []
+    this.firebaseData.snapshotChanges().pipe(
+      map(changes => {
+        changes.map(async (c: any) => {
+          data[await c.payload.key] = await c.payload.val();
+        })
+      })
+    ).subscribe();
+
+    return await data;
   }
 }
