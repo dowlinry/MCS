@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "mcs-activitytracker": {
+      "hosting": {
+        "productivity-viz": [
+          "mcs-activitytracker"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "mcs-activitytracker"
+  }
+}

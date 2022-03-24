@@ -98,6 +98,16 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "prerender": false,
+            "ssr": false,
+            "browserTarget": "productivity-viz:build:production",
+            "firebaseProject": "mcs-activitytracker",
+            "firebaseHostingSite": "mcs-activitytracker"
+          }
         }
       }
     }

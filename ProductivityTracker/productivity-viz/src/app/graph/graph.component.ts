@@ -19,12 +19,15 @@ export class GraphComponent implements OnInit {
   constructor(private ApiService: ApiServiceService) { }
 
   async ngOnInit() {
-    const tmp = await this.getRepoData("MCS");
-    console.log(await tmp);
+    // const tmp = await this.getRepoData("MCS");
+    // console.log(await tmp);
+
+    this.getFirebaseData();
   }
 
   private getFirebaseData(){
-    
+    const data = this.ApiService.getFirebaseData();
+    console.log(data);
   }
 
   private async getRepoData(repo: any) {

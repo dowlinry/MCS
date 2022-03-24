@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Octokit } from '@octokit/rest';
+import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/database';
 
 import config from 'assets/config';
 
@@ -11,7 +12,7 @@ import config from 'assets/config';
 export class ApiServiceService {
 
   
-  constructor(private http: HttpClient) { }
+  constructor(private firebase: AngularFireDatabase) { }
 
   private firebaseURL: any = config.firebaseDatabaseURL;
   private accessToken: any = config.githubAccessToken;
@@ -92,5 +93,8 @@ export class ApiServiceService {
     return await response.data;
   }
 
-  public getFirebaseData(){}
+  public getFirebaseData(){
+    const data = this.firebase.list('DailySteps');
+    console.log(data);
+  }
 }
