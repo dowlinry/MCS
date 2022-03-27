@@ -20,6 +20,8 @@
     "@angular/platform-browser-dynamic": "~13.2.0",
     "@angular/router": "~13.2.0",
     "@octokit/rest": "^18.12.0",
+    "@types/d3": "^7.1.0",
+    "d3": "^7.3.0",
     "firebase": "^9.4.0",
     "rxfire": "^6.0.0",
     "rxjs": "~7.5.0",

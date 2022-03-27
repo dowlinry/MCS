@@ -1,5 +1,7 @@
 <div>
   <h1>Visualization of Activity and Productivity Data</h1>
   <!-- <app-details></app-details> -->
-  <app-graph></app-graph>
+  <div *ngIf="!loading">
+    <app-graph [firebaseData]="firebaseData" [githubData]="githubData"></app-graph>
+  </div>
 </div>
