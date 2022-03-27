@@ -11,12 +11,15 @@ export class AppComponent implements OnInit {
 
   githubData = [];
   firebaseData = [];
+
   loading = true;
 
   constructor(private ApiService: ApiServiceService){}
 
   async ngOnInit() {
-    this.getData();
+    await this.getData();
+    console.log("Github Data: ", this.githubData);
+    console.log("Firebase Data: ", this.firebaseData)
   }
 
   private async getRepoData(repo: any) {

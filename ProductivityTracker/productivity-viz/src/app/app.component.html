@@ -1,5 +1,15 @@
 <div>
   <h1>Visualization of Activity and Productivity Data</h1>
+  <select name="repos" id="repos">
+    <option selected="selected" value="one">MCS</option>
+    <option value="two">Measurement-Of-Software-Engineering</option>
+  </select>
+  <select name="metrics" id="metrics">
+    <option selected="selected" value="one">Commits</option>
+    <option value="two">Additions</option>
+    <option value="three">Deletions</option>
+    <option value="four">Addition + Deletions</option>
+  </select>
   <!-- <app-details></app-details> -->
   <div *ngIf="!loading">
     <app-graph [firebaseData]="firebaseData" [githubData]="githubData"></app-graph>

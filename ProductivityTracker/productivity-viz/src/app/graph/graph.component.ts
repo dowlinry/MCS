@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import * as d3 from 'd3';
-import { ApiServiceService } from '../api-service/api-service.service';
 
 @Component({
   selector: 'app-graph',
@@ -12,6 +11,7 @@ export class GraphComponent implements OnInit {
 
   @Input() firebaseData: any = [];
   @Input() githubData: any = [];
+  combinedData = [];
 
   private svgTS: any;
   private svgSC: any;
@@ -19,14 +19,50 @@ export class GraphComponent implements OnInit {
   private width = 750 - (this.margin * 2);
   private height = 400 - (this.margin * 2)
 
-  constructor(private ApiService: ApiServiceService) { }
+  constructor() { }
 
   async ngOnInit() {
-    console.log(await this.firebaseData);
-    console.log(await this.githubData)
+    this.combinedData = await this.combineData(await this.githubData, await this.firebaseData);
 
     this.createSvg(this.svgTS, "time-series");
     this.createSvg(this.svgSC, "scatter")
+  }
+
+  private async combineData(githubData: any, firebaseData: any){
+    let data: any = [];
+    const commitDates = Object.keys(githubData);
+
+    for await (const date of commitDates){
+      data[date] = {
+        stats: githubData[date].stats,
+        commits: githubData[date].commits,
+        steps: 0
+      }
+    }
+
+    const movementDates = Object.keys(firebaseData)
+
+    for await (const date of movementDates){
+      if(data[date]){
+        data[date] = {
+          stats: data[date].stats,
+          commits: data[date].stats,
+          steps: firebaseData[date].value
+        }
+      }
+      else{
+        data[date] = {
+          stats: {
+            additions: 0,
+            deletions: 0,
+            total: 0
+          },
+          commits: 0,
+          steps: firebaseData[date].value
+        }
+      }
+    }
+    return await data;
   }
 
   private createSvg(svg: any, id: any): void {
