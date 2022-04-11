@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Button,
   Image,
@@ -23,18 +23,6 @@ const LoginScreen = () => {
 
     return (
         <SafeAreaView>
-          {/* <Modal
-            animationType='slide'
-            transparent={true}
-            visible={showModal}
-            onRequestClose={() => {
-              setShowModal(!showModal);
-            }}
-          >
-            <View>
-              <Text>{modalText}</Text>
-            </View>
-          </Modal> */}
           <View style={styles.screen}>
             {showErrorText && <Text style={styles.errorText}>{errorText}</Text>}
             <Image

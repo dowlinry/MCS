@@ -6,6 +6,12 @@ import { StepCounterScreen, LoginScreen } from './Screens/Screens';
 
 import { firebase } from './firebase';
 
+import { LogBox } from 'react-native';
+
+// supress warnings
+LogBox.ignoreLogs(['Warning: ...']); 
+LogBox.ignoreAllLogs();
+
 firebase.app();
 
 const Stack = createNativeStackNavigator();
