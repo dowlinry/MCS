@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Button
 } from 'react-native';
 
 import {
@@ -19,12 +20,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // Push data to firebase every minute
 _BackgroundTimer.runBackgroundTimer(() => {
   pushSteps();
-  console.log("PUSHING")
-}, 30000); 
+}, 5000); 
 
-const StepCounterScreen = () => {
+const StepCounterScreen = ({navigation, route}) => {
   const [displayedSteps, setDisplayedSteps] = useState(0);
-  
+
+  const username = route.params.username;
+
   var initSteps = 0;
   var totalSteps = 0;
 
@@ -37,7 +39,7 @@ const StepCounterScreen = () => {
 
   if(loading){
     database()
-    .ref(`DailySteps/${getDate()}`)
+    .ref(`${username}/DailySteps/${getDate()}`)
     .once('value')
     .then(snapshot => {
       if(snapshot.val()){
@@ -46,6 +48,13 @@ const StepCounterScreen = () => {
         loading = false;
       }
     });
+  }
+
+  const signOut = async () => {
+    await AsyncStorage.setItem('username', "")
+    console.log("test")
+    navigation.navigate('Login')
+    
   }
 
   useEffect(() => {
@@ -67,13 +76,20 @@ const StepCounterScreen = () => {
   return (
     <SafeAreaView>
       <View style={styles.screen}>
-        <Text>Steps Taken Today</Text>
+        <Text style={styles.title}>Steps Taken Today</Text>
         <Text style={styles.step}>{displayedSteps}</Text>
+        <Text style = {styles.username}>Signed in as: <Text style={{fontWeight: 'bold'}}>{username}</Text></Text>
+        <Button
+                onPress={signOut}
+                title="Sign Out"
+                color='#1B79B7'
+        />
       </View>
     </SafeAreaView>
   );
 
 };
+
 
 const storeSteps = async(value) => {
   try{
@@ -82,7 +98,6 @@ const storeSteps = async(value) => {
   } catch (e){
     console.log(e);
   }
-  
 }
 
 const readSteps = async () => {
@@ -90,10 +105,16 @@ const readSteps = async () => {
   return jsonValue != null ? JSON.parse(jsonValue) : null;
 }
 
+const getUsername = async () => { 
+  const jsonValue = await AsyncStorage.getItem('username')
+  return jsonValue != null ? JSON.parse(jsonValue) : null;
+}
 const pushSteps = async () => {
+  const username = await getUsername();
+
   readSteps().then(steps => {
     database()
-    .ref(`DailySteps/${getDate()}`).set({
+    .ref(`${username}/DailySteps/${getDate()}`).set({
       value: steps
     })
   });
@@ -116,9 +137,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+
+  title: {
+    fontWeight: 'bold',
+    fontSize: 24
+  },
+
   step: {
-    fontSize: 36
+    fontSize: 40,
+    marginTop: 10,
+    marginBottom: 30
+  },
+
+  username: {
+    fontSize: 24,
+    justifyContent: 'flex-start',
+    marginBottom: 20
   }
+
 });
 
 export default StepCounterScreen;

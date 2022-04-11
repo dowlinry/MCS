@@ -1,2 +1,7 @@
+import LoginScreen from './LoginScreen';
 import StepCounterScreen from "./StepCounterScreen";
-export default StepCounterScreen;
+
+export {
+    LoginScreen,
+    StepCounterScreen,
+}
