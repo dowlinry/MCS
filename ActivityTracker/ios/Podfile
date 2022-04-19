@@ -16,6 +16,12 @@ target 'ActivityTracker' do
 
   pod 'react-native-shake', :path => '../node_modules/react-native-shake'
 
+  pod 'react-native-background-timer', :path => '../node_modules/react-native-background-timer'
+
+  pod 'RNSensors', :path => '../node_modules/react-native-sensors'
+
+  pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
+
   target 'ActivityTrackerTests' do
     inherit! :complete
     # Pods for testing
