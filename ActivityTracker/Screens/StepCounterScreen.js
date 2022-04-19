@@ -4,7 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Button
+  Button,
 } from 'react-native';
 
 import {
@@ -30,22 +30,28 @@ const StepCounterScreen = ({navigation, route}) => {
   var initSteps = 0;
   var totalSteps = 0;
 
-  var lastMovement = 0;
+  var prevMagnitude = 0;
 
   var loading = true;
 
-  setUpdateIntervalForType(SensorTypes.accelerometer, 1000); // defaults to 100ms
+  setUpdateIntervalForType(SensorTypes.accelerometer, 100); // defaults to 100ms
 
 
   if(loading){
     database()
-    .ref(`${username}/DailySteps/${getDate()}`)
+    .ref(`${username}/PhysicalActivityData/${getDate()}`)
     .once('value')
     .then(snapshot => {
       if(snapshot.val()){
         initSteps = snapshot.val().value;
         totalSteps = initSteps;
         loading = false;
+      }
+      else{
+        database()
+        .ref(`${username}/PhysicalActivityData/${getDate()}`).set({
+          value: 0
+        })
       }
     });
   }
@@ -61,13 +67,15 @@ const StepCounterScreen = ({navigation, route}) => {
     accelerometer.subscribe(
       ({x, y, z}) => {
         if(!loading){
-          const currMovement = x + y + z
-          if(Math.abs(currMovement - lastMovement) > 1){
-            totalSteps ++;
+          let magnitude = Math.sqrt(x*x + y*y + z*z)
+          let magnitudeDelta = magnitude - prevMagnitude;
+          prevMagnitude = magnitude
+
+          if(magnitudeDelta > 6){
+            totalSteps++;
             storeSteps(totalSteps);
             setDisplayedSteps(totalSteps);
           }
-          lastMovement = currMovement;
         }
       }
     )
@@ -114,10 +122,15 @@ const pushSteps = async () => {
 
   readSteps().then(steps => {
     database()
-    .ref(`${username}/DailySteps/${getDate()}`).set({
+    .ref(`${username}/PhysicalActivityData/${getDate()}`).set({
       value: steps
     })
   });
+
+  // readSteps().then(steps => {
+  //   database()
+  //   .set(`${username}/PhysicalActivityData/${getDate()}`, {value: steps})
+  // });
 }
 
 function getDate(){
@@ -126,7 +139,7 @@ function getDate(){
   let mm = String(date.getMonth() + 1).padStart(2, '0'); 
   let yyyy = date.getFullYear();
 
-  return dd + '-' + mm + '-' + yyyy
+  return mm + '-' + dd + '-' + yyyy
 }
 
 const styles = StyleSheet.create({

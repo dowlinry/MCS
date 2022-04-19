@@ -8,6 +8,7 @@ import { firebase } from './firebase';
 
 import { LogBox } from 'react-native';
 
+
 // supress warnings
 LogBox.ignoreLogs(['Warning: ...']); 
 LogBox.ignoreAllLogs();
