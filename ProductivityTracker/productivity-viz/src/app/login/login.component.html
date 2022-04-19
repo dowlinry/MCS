@@ -1,0 +1,15 @@
+<div class="container">
+    <h1>Github Profile Login</h1>
+    <img class="icon" src="assets/github_logo.png">
+    <div class="user-details">
+        <form class="user-details"[formGroup]="userDetailsForm" (ngSubmit)="onSubmit()">
+            <div>
+                <input class="input" id="username" type="text" formControlName="username" placeholder="Username">
+            </div>
+            <div>
+                <input class="input "id="accessToken" type="password" formControlName="accessToken" placeholder="Github Access Token">
+            </div>
+            <button class="button" type="submit">Login</button>
+        </form>
+    </div>
+</div>

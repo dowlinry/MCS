@@ -24,8 +24,9 @@ export class GraphComponent implements OnInit {
   async ngOnInit() {
     this.combinedData = await this.combineData(await this.githubData, await this.firebaseData);
 
-    this.createSvg(this.svgTS, "time-series");
-    this.createSvg(this.svgSC, "scatter")
+    this.createSvgTS();
+    setTimeout(() => this.drawTimeSeries(this.firebaseData), 3000);
+    // this.createSvg(this.svgSC, "scatter")
   }
 
   private async combineData(githubData: any, firebaseData: any){
@@ -65,8 +66,8 @@ export class GraphComponent implements OnInit {
     return await data;
   }
 
-  private createSvg(svg: any, id: any): void {
-    svg = d3.select(`figure#${id}`)
+  private createSvgTS(): void {
+    this.svgTS = d3.select('figure#time-series')
     .append("svg")
     .attr("width", this.width + (this.margin * 2))
     .attr("height", this.height + (this.margin * 2))
@@ -78,20 +79,20 @@ export class GraphComponent implements OnInit {
 
   }
 
-  private drawTimeSeries(svg: any, data: any) {
+  private async drawTimeSeries(data: any) {
     // Create the X-axis band scale
+    data.forEach((element:any) => {
+      console.log(element)
+    });
+
     const x = d3.scaleBand()
-    .range([0, this.width])
-    .domain(data.map((d:any) => d.key))
-    .padding(0.2);
+    .domain(Object.keys(data))
+    .range([0, this.width]);
 
     // Draw the X-axis on the DOM
-    svg.append("g")
+    this.svgTS.append("g")
     .attr("transform", "translate(0," + this.height + ")")
-    .call(d3.axisBottom(x))
-    .selectAll("text")
-    .attr("transform", "translate(-10,0)rotate(-45)")
-    .style("text-anchor", "end");
+    .call(d3.axisBottom(x));
 
     // Create the Y-axis band scale
     const y = d3.scaleLinear()
@@ -99,11 +100,11 @@ export class GraphComponent implements OnInit {
     .range([this.height, 0]);
 
     // Draw the Y-axis on the DOM
-    svg.append("g")
+    this.svgTS.append("g")
     .call(d3.axisLeft(y));
 
     // Create and fill the bars
-    svg.selectAll("bars")
+    this.svgTS.selectAll("bars")
     .data(data)
     .enter()
     .append("rect")
@@ -112,6 +113,16 @@ export class GraphComponent implements OnInit {
     .attr("width", x.bandwidth())
     .attr("height", (d: any) => this.height - y(d.Stars))
     .attr("fill", "#d04a35");
-}
+
+    // this.svgTS.append("path")
+    // .datum(data)
+    // .attr("fill", "none")
+    // .attr("stroke", "steelblue")
+    // .attr("stroke-width", 1.5)
+    // .attr("d", d3.line()
+    //   .x((d: any) => { return x(d.date) })
+    //   .y((d: any) => { return y(d.value) })
+    // )
+  }
 
 }

@@ -6,25 +6,26 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.dropdowns {
-    display: flex;
-    flex-direction: row;   
+.icon {
+    width: 15%;
 }
 
-
-.dropdown-container {
+.user-details {
     display: flex;
     flex-direction: column;
-}
-.dropdown {
-    width: 400px;
-    height: 30px;
-    margin-left: 50px;
-    margin-right: 50px;
-    margin-bottom: 50px;
+    justify-content: center;
+    align-items: center;
 }
 
-.graphs{
-    display: flex;
-    flex-direction: row;
+.input {
+    margin: 10px;
+    height: 30px;
+    width: 400px;
+}
+
+.button {
+    background-color: #1B79B7;
+    color:white;
+    height: 30px;
+    width: 300px;
 }

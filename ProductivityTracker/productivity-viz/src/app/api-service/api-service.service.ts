@@ -11,58 +11,91 @@ import config from 'assets/config';
 })
 export class ApiServiceService {
 
-  private accessToken: any = config.githubAccessToken;
-  private githubUsername: any = config.githubUsername;
+  private githubUsername: any;
   private repos: any = config.repos;
-  private firebaseData: AngularFireList<any>;
+  private firebaseData!: AngularFireList<any>;
+  private firebaseRef!: AngularFireList<any>
 
-  constructor(private firebase: AngularFireDatabase) { 
-    this.firebaseData = firebase.list('DailySteps');
-  }
+  constructor(private firebase: AngularFireDatabase) { }
 
-  private octokit = new Octokit({
-    auth: this.accessToken
-  })
+  private octokit: any;
 
-  public setAccessToken(token: string) {
-    this.accessToken = token;
-  }
+  public async verifyUser(username: any, accessToken: any){
+    this.octokit = new Octokit({
+      auth: accessToken
+    })
 
-  public setUsername(name: string){
-    this.githubUsername = name;
+
+    return await this.octokit.request('GET /user')
+    .then((response: any) => {
+      if(response.data.login === username){
+        this.githubUsername = username;
+        this.firebaseData = this.firebase.list(`${username}/PhysicalActivityData`);
+        this.firebaseRef = this.firebase.list(`${username}`);
+        return true;
+      }
+      else return "Invalid username or access token";
+    })
+    .catch((err: any) => {
+      return "An error had occured, please try again";
+    })
+    
   }
 
   public getRepos(){
     return this.repos;
   }
-  public async getCommitData(repo: any){
-    const repoCommits = await this.getRepoCommits(repo);
-     
-    return await repoCommits;
+  public async getCommitData(){
+    const repos = await this.getUsersRepos();
+
+
+    let allRepoCommits = repos.map(async(repo: any) => {
+      const repoCommits = await this.getRepoCommits(repo);
+      return {key: repo, value: repoCommits}
+    })
+    
+    return await allRepoCommits;
   }
 
   private async getRepoCommits(repo: any){
     const branches: any = await this.getBranches(repo);
-      
+
     let repoCommits = branches.data.map(async (branch: any) => {
       const commits: any = await this.getBranchCommits(repo, branch)
-        
       let commitsDetails = commits.data.map(async (commit: any) => {
-        if(this.isUserCommit(commit)){
           const details = await this.getCommitDetails(commit, repo);
           
           return await details;
-        } else return await {};
       })
       return await commitsDetails
     })
     return await repoCommits;
   }
+  
+
+  private async getUsersRepos(){
+    const repos = await this.octokit.request('GET /user/repos')
+
+    let usersRepos: any = [];
+
+    for await(const repo of repos.data){
+      if(repo.owner.login === this.githubUsername){
+        usersRepos.push(repo.name)
+      }
+    }
+    return await usersRepos;
+  }
+
   private async getBranches(repo: any){
-    return await this.octokit.rest.repos.listBranches({
+    const branches = await this.octokit.rest.repos.listBranches({
       owner: this.githubUsername,
       repo: repo,
     })
+    .catch((err: any) => {
+      return "Error"
+    })
+
+    return await branches;
   }
 
   private async getBranchCommits(repo: any, branch: any){
@@ -73,7 +106,7 @@ export class ApiServiceService {
     })
   }
 
-  private isUserCommit(commit: any){
+  public isUserCommit(commit: any){
     if(commit.author.login === this.githubUsername){
       return true;
     } else return false;
@@ -94,11 +127,16 @@ export class ApiServiceService {
     this.firebaseData.snapshotChanges().pipe(
       map(changes => {
         changes.map(async (c: any) => {
-          data[await c.payload.key] = await c.payload.val();
+          //data[await c.payload.key] = await c.payload.val();
+          data.push({date: await c.payload.key, value: await c.payload.val().value})
         })
       })
     ).subscribe();
 
     return await data;
+  }
+
+  public async pushData(repo: any, date: any, data: any) {
+    this.firebaseRef.set(`EngineeringData/${repo}/${date}`, {data})
   }
 }
