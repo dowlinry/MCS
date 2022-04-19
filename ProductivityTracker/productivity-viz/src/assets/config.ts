@@ -1,9 +1,7 @@
 const config = {
-    githubUsername: "dowlinry",
-    githubAccessToken: "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",
-    repos: [
-        {name: "MCS"},
-    ],
+    githubUsername: "",
+    githubAccessToken: "",
+    repos: [,],
     firebaseDatabaseURL: ""   
 }
 
