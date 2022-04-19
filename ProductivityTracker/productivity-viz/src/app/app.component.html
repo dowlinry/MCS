@@ -1,0 +1,8 @@
+<div>
+  <div *ngIf="!loggedIn">
+    <app-login (loggedInEvent)="login($event)"></app-login>
+  </div>
+  <div *ngIf="loggedIn">
+    <app-details></app-details>
+  </div>
+</div>

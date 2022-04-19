@@ -1,0 +1,27 @@
+<div *ngIf=loading>
+    <p>Loading</p>
+</div>
+<div class="container" *ngIf="!loading">
+    <h1>Visualization of Activity and Productivity Data</h1>
+    <div class="dropdowns">
+      <div class="dropdown-container">
+        <p><b>Repository: </b></p>
+        <select class="dropdown" #selectRepo (change)="onSelectRepo(selectRepo.value)" [value]="">
+          <option *ngFor="let repo of githubData" value="{{repo.key}}">{{repo.key}}</option>
+        </select>
+      </div>
+      <div class="dropdown-container">
+        <p><b>Metric: </b></p>
+        <select class="dropdown" #selectMetric (change)="onSelectMetric(selectMetric.value)">
+          <option selected="selected" value="commits">Commits</option>
+          <option value="adds">Additions</option>
+          <option value="deletes">Deletions</option>
+          <option value="addsAndDeletes">Addition + Deletions</option>
+        </select>
+      </div>
+    </div>
+    <div class="graphs" *ngIf="!loading">
+      <app-time-series [firebaseData]="firebaseData" [githubData]="selectedRepoData" [metric]="selectedMetric"></app-time-series>
+      <app-scatter [firebaseData]="firebaseData" [githubData]="selectedRepoData" [metric]="selectedMetric"></app-scatter>   
+    </div>
+</div>

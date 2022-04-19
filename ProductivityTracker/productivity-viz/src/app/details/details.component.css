@@ -1,0 +1,30 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.dropdowns {
+    display: flex;
+    flex-direction: row;   
+}
+
+
+.dropdown-container {
+    display: flex;
+    flex-direction: column;
+}
+.dropdown {
+    width: 400px;
+    height: 30px;
+    margin-left: 50px;
+    margin-right: 50px;
+    margin-bottom: 50px;
+}
+
+.graphs{
+    display: flex;
+    flex-direction: row;
+}

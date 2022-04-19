@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "angular": "^1.8.2",
     "axios": "^0.26.0",
     "nodemon": "^2.0.15",
     "prompt": "^1.2.2"
